@@ -1,4 +1,4 @@
-# Shuttle Ethereum Contracts
+# Unity Ethereum Contracts
 
 ## Setup Env
 ```
@@ -19,9 +19,9 @@ $ truffle migrate --network ropsten
 $ truffle console --network ropsten
 
 # In truffle console
->> const wLuna = await WrappedLuna.deployed();
->> wLuna.mint('0xabed2612bdd59218e72edda5cc69ddc429937407', '10000000000000000000000')
->> wLuna.balanceOf('0xabed2612bdd59218e72edda5cc69ddc429937407')
->> wLuna.burn('1000000000000000000', '0x59ea5499dec9e792469b36777ade3d267b5127de')
+>> const wBiq = await WrappedBiq.deployed();
+>> wBiq.mint('0xabed2612bdd59218e72edda5cc69ddc429937407', '10000000000000000000000')
+>> wBiq.balanceOf('0xabed2612bdd59218e72edda5cc69ddc429937407')
+>> wBiq.burn('1000000000000000000', '0x59ea5499dec9e792469b36777ade3d267b5127de')
 
 ```
