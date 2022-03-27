@@ -5,7 +5,7 @@ import * as https from 'https';
 import { promisify } from 'util';
 import BigNumber from 'bignumber.js';
 import Bluebird from 'bluebird';
-import { Tx } from '@terra-money/terra.js';
+import { Tx } from '@web4/iq.js';
 
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
 
@@ -16,7 +16,7 @@ import { DynamoDB } from './DynamoDB';
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
 
 // skip chain-id prefix for mainnet
-const REDIS_PREFIX = 'eth_shuttle' + ETH_CHAIN_ID.replace('mainnet', '');
+const REDIS_PREFIX = 'eth_unity' + ETH_CHAIN_ID.replace('mainnet', '');
 const KEY_LAST_HEIGHT = 'last_height';
 const KEY_NEXT_SEQUENCE = 'next_sequence';
 const KEY_QUEUE_TX = 'queue_tx';
@@ -36,7 +36,7 @@ const ax = axios.create({
   timeout: 15000,
 });
 
-class Shuttle {
+class Unity {
   monitoring: Monitoring;
   relayer: Relayer;
   dynamoDB: DynamoDB;
@@ -142,7 +142,7 @@ class Shuttle {
       missingTxHashes
     );
 
-    // Relay to terra chain
+    // Relay to iq chain
     if (monitoringDatas.length > 0) {
       
       // Clear missing tx hashes
@@ -272,7 +272,7 @@ class Shuttle {
     let notification = '';
     monitoringDatas.forEach((data) => {
       notification += '```';
-      notification += `[${SLACK_NOTI_NETWORK}] ${SLACK_NOTI_ETH_ASSET} => TERRA\n`;
+      notification += `[${SLACK_NOTI_NETWORK}] ${SLACK_NOTI_ETH_ASSET} => IQ\n`;
       notification += `Sender: ${data.sender}\n`;
       notification += `To:     ${data.to}\n`;
       notification += `\n`;
@@ -287,7 +287,7 @@ class Shuttle {
         .toFixed(6)} ${data.asset}\n`;
       notification += `\n`;
       notification += `${SLACK_NOTI_ETH_ASSET} TxHash:   ${data.txHash}\n`;
-      notification += `Terra TxHash: ${resultTxHash}\n`;
+      notification += `Iq TxHash: ${resultTxHash}\n`;
       notification += '```\n';
     });
 
@@ -299,4 +299,4 @@ class Shuttle {
   }
 }
 
-export = Shuttle;
+export = Unity;

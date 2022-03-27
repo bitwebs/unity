@@ -8,7 +8,7 @@ import BlueBird from 'bluebird';
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
 
 import EthContractInfos from './config/EthContractInfos';
-import TerraAssetInfos from './config/TerraAssetInfos';
+import IqAssetInfos from './config/IqAssetInfos';
 
 const FEE_RATE = process.env.FEE_RATE as string;
 
@@ -19,15 +19,15 @@ const ETH_BLOCK_CONFIRMATION = parseInt(
 );
 
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
-const TERRA_CHAIN_ID = process.env.TERRA_CHAIN_ID as string;
+const IQ_CHAIN_ID = process.env.IQ_CHAIN_ID as string;
 
 const MAX_RETRY = 5;
 export class Monitoring {
   Web3: Web3;
 
   AddressAssetMap: { [address: string]: string };
-  TerraAssetInfos: {
-    [asset: string]: TerraAssetInfo;
+  IqAssetInfos: {
+    [asset: string]: IqAssetInfo;
   };
 
   constructor() {
@@ -35,16 +35,16 @@ export class Monitoring {
     this.Web3 = new Web3(ETH_URL);
 
     const ethContractInfos = EthContractInfos[ETH_CHAIN_ID];
-    const terraAssetInfos = TerraAssetInfos[TERRA_CHAIN_ID];
+    const iqAssetInfos = IqAssetInfos[IQ_CHAIN_ID];
 
     this.AddressAssetMap = {};
-    this.TerraAssetInfos = {};
+    this.IqAssetInfos = {};
     for (const [asset, value] of Object.entries(ethContractInfos)) {
       if (asset === 'minter') {
         continue;
       }
 
-      const info = terraAssetInfos[asset];
+      const info = iqAssetInfos[asset];
       if (info === undefined) {
         continue;
       }
@@ -61,7 +61,7 @@ export class Monitoring {
       }
 
       this.AddressAssetMap[value.contract_address] = asset;
-      this.TerraAssetInfos[asset] = info;
+      this.IqAssetInfos[asset] = info;
     }
   }
 
@@ -130,20 +130,20 @@ export class Monitoring {
         const amount = requested.minus(fee);
 
         const asset = this.AddressAssetMap[log.address];
-        const info = this.TerraAssetInfos[asset];
+        const info = this.IqAssetInfos[asset];
         return {
           blockNumber: log.blockNumber,
           txHash: log.transactionHash,
           sender: decodedData['_sender'],
           to: bech32.encode(
-            'terra',
+            'iq',
             bech32.toWords(hexToBytes(decodedData['_to'].slice(0, 42)))
           ),
           requested: requested.toFixed(0),
           amount: amount.toFixed(0),
           fee: fee.toFixed(0),
           asset,
-          terraAssetInfo: info,
+          iqAssetInfo: info,
         };
       });
 
@@ -267,7 +267,7 @@ function decodeLog(web3: Web3, log: Log): { [key: string]: string } {
   );
 }
 
-export type TerraAssetInfo = {
+export type IqAssetInfo = {
   is_eth_asset?: boolean;
   contract_address?: string;
   denom?: string;
@@ -283,6 +283,6 @@ export type MonitoringData = {
   fee: string;
   asset: string;
 
-  // terra side data for relayer
-  terraAssetInfo: TerraAssetInfo;
+  // iq side data for relayer
+  iqAssetInfo: IqAssetInfo;
 };

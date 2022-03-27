@@ -3,6 +3,6 @@ pragma solidity >=0.6.0;
 
 import './WrappedToken.sol';
 
-contract WrappedmBABA is WrappedToken {
-    constructor() public WrappedToken("Wrapped Mirror BABA Token", "mBABA") {}
+contract WrappeddBABA is WrappedToken {
+    constructor() public WrappedToken("Wrapped Duality BABA Token", "dBABA") {}
 }

@@ -20,20 +20,20 @@ import {
 
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
 
-const DYNAMO_SHUTTLE_ID = `TERRA_SHUTTLE_${ETH_CHAIN_ID.toUpperCase().replace(
+const DYNAMO_UNITY_ID = `IQ_UNITY_${ETH_CHAIN_ID.toUpperCase().replace(
   '-',
   '_'
 )}`;
 const DYNAMO_ACCESS_KEY_ID = process.env.DYNAMO_ACCESS_KEY_ID as string;
 const DYNAMO_SECRET_ACCESS_KEY = process.env.DYNAMO_SECRET_ACCESS_KEY as string;
 const DYNAMO_REGION = process.env.DYNAMO_REGION as string;
-const DYNAMO_TRANSACTION_TABLE_NAME = `ShuttleTx`;
+const DYNAMO_TRANSACTION_TABLE_NAME = `UnityTx`;
 const DYNAMO_MAX_LOAD_UNIT = 100;
 const DYNAMO_MAX_STORE_UNIT = 25;
 
-const DYNAMO_ENABLE_ETH_ANCHOR_WHITELIST =
-  process.env.DYNAMO_ENABLE_ETH_ANCHOR_WHITELIST === 'true';
-const DYNAMO_ETH_ANCHOR_TABLE = `eth-anchor-bot-accounts-v2-${process.env.DYNAMO_ETH_ANCHOR_STAGE}`;
+const DYNAMO_ENABLE_ETH_GRAVITY_WHITELIST =
+  process.env.DYNAMO_ENABLE_ETH_GRAVITY_WHITELIST === 'true';
+const DYNAMO_ETH_GRAVITY_TABLE = `eth-gravity-bot-accounts-v2-${process.env.DYNAMO_ETH_GRAVITY_STAGE}`;
 
 export interface TransactionData {
   fromTxHash: string;
@@ -57,10 +57,10 @@ export class DynamoDB {
     });
   }
 
-  async isEthAnchorAddress(recipientAddr: string): Promise<boolean> {
-    if (recipientAddr !== "" && DYNAMO_ENABLE_ETH_ANCHOR_WHITELIST) {
+  async isEthGravityAddress(recipientAddr: string): Promise<boolean> {
+    if (recipientAddr !== "" && DYNAMO_ENABLE_ETH_GRAVITY_WHITELIST) {
       const params: QueryCommandInput = {
-        TableName: DYNAMO_ETH_ANCHOR_TABLE,
+        TableName: DYNAMO_ETH_GRAVITY_TABLE,
         IndexName: 'IndexedByOperationAddr',
         KeyConditionExpression: 'operationAddr = :v_operationAddr',
         ExpressionAttributeValues: {
@@ -90,7 +90,7 @@ export class DynamoDB {
     const params: GetItemCommandInput = {
       TableName: DYNAMO_TRANSACTION_TABLE_NAME,
       Key: {
-        ShuttleID: { S: DYNAMO_SHUTTLE_ID },
+        UnityID: { S: DYNAMO_UNITY_ID },
         FromTxHash: { S: fromTxHash },
       },
       ProjectionExpression: 'FromTxHash',
@@ -120,7 +120,7 @@ export class DynamoDB {
       [DYNAMO_TRANSACTION_TABLE_NAME]: {
         Keys: fromTxHashes.map((fromTxHash) => {
           return {
-            ShuttleID: { S: DYNAMO_SHUTTLE_ID },
+            UnityID: { S: DYNAMO_UNITY_ID },
             FromTxHash: { S: fromTxHash },
           };
         }),
@@ -169,7 +169,7 @@ export class DynamoDB {
               ToTxHash: { S: data.toTxHash },
               Sender: { S: data.sender },
               Recipient: { S: data.recipient },
-              ShuttleID: { S: DYNAMO_SHUTTLE_ID },
+              UnityID: { S: DYNAMO_UNITY_ID },
               CreatedAt: { S: new Date().toISOString() },
             },
           },
@@ -199,7 +199,7 @@ export class DynamoDB {
         Sender: { S: data.sender },
         Recipient: { S: data.recipient },
         Amount: { S: data.amount },
-        ShuttleID: { S: DYNAMO_SHUTTLE_ID },
+        UnityID: { S: DYNAMO_UNITY_ID },
         CreatedAt: { S: new Date().toISOString() },
       },
     };
@@ -217,7 +217,7 @@ export class DynamoDB {
     const params: UpdateItemCommandInput = {
       TableName: DYNAMO_TRANSACTION_TABLE_NAME,
       Key: {
-        ShuttleID: { S: DYNAMO_SHUTTLE_ID },
+        UnityID: { S: DYNAMO_UNITY_ID },
         FromTxHash: { S: fromTxHash },
       },
       UpdateExpression: 'ADD ReplaceTxHashes :t, SET HasReplaceTxHashes = :b',

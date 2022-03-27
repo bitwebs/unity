@@ -10,7 +10,7 @@ import {
   Coin,
   Tx,
   TxInfo,
-} from '@terra-money/terra.js';
+} from '@web4/iq.js';
 import { MonitoringData } from 'Monitoring';
 import axios from 'axios';
 import * as http from 'http';
@@ -22,15 +22,15 @@ const ax = axios.create({
   timeout: 15000,
 });
 
-const TERRA_MNEMONIC = process.env.TERRA_MNEMONIC as string;
-const TERRA_CHAIN_ID = process.env.TERRA_CHAIN_ID as string;
-const TERRA_URL = process.env.TERRA_URL as string;
-const TERRA_GAS_PRICE = process.env.TERRA_GAS_PRICE as string;
-const TERRA_GAS_PRICE_END_POINT = process.env
-  .TERRA_GAS_PRICE_END_POINT as string;
-const TERRA_GAS_PRICE_DENOM = process.env.TERRA_GAS_PRICE_DENOM as string;
-const TERRA_GAS_ADJUSTMENT = process.env.TERRA_GAS_ADJUSTMENT as string;
-const TERRA_DONATION = process.env.TERRA_DONATION as string;
+const IQ_MNEMONIC = process.env.IQ_MNEMONIC as string;
+const IQ_CHAIN_ID = process.env.IQ_CHAIN_ID as string;
+const IQ_URL = process.env.IQ_URL as string;
+const IQ_GAS_PRICE = process.env.IQ_GAS_PRICE as string;
+const IQ_GAS_PRICE_END_POINT = process.env
+  .IQ_GAS_PRICE_END_POINT as string;
+const IQ_GAS_PRICE_DENOM = process.env.IQ_GAS_PRICE_DENOM as string;
+const IQ_GAS_ADJUSTMENT = process.env.IQ_GAS_ADJUSTMENT as string;
+const IQ_DONATION = process.env.IQ_DONATION as string;
 
 export interface RelayDataRaw {
   tx: string;
@@ -49,17 +49,17 @@ export class Relayer {
   LCDClient: LCDClient;
 
   constructor() {
-    // Register terra chain infos
+    // Register iq chain infos
     this.LCDClient = new LCDClient({
-      URL: TERRA_URL,
-      chainID: TERRA_CHAIN_ID,
-      gasPrices: TERRA_GAS_PRICE,
-      gasAdjustment: TERRA_GAS_ADJUSTMENT,
+      URL: IQ_URL,
+      chainID: IQ_CHAIN_ID,
+      gasPrices: IQ_GAS_PRICE,
+      gasAdjustment: IQ_GAS_ADJUSTMENT,
     });
 
     this.Wallet = new Wallet(
       this.LCDClient,
-      new MnemonicKey({ mnemonic: TERRA_MNEMONIC })
+      new MnemonicKey({ mnemonic: IQ_MNEMONIC })
     );
   }
 
@@ -77,7 +77,7 @@ export class Relayer {
 
         // If the given `to` address not proper address,
         // relayer send the funds to donation address
-        const toAddr = AccAddress.validate(data.to) ? data.to : TERRA_DONATION;
+        const toAddr = AccAddress.validate(data.to) ? data.to : IQ_DONATION;
 
         // 18 decimal to 6 decimal
         // it must bigger than 1,000,000,000,000
@@ -86,7 +86,7 @@ export class Relayer {
         }
 
         const amount = data.amount.slice(0, data.amount.length - 12);
-        const info = data.terraAssetInfo;
+        const info = data.iqAssetInfo;
 
         if (info.denom) {
           const denom = info.denom;
@@ -137,8 +137,8 @@ export class Relayer {
 
     // if something wrong, pass undefined to use default gas 
     const gasPrices = await this.loadGasPrice(
-      TERRA_GAS_PRICE_END_POINT,
-      TERRA_GAS_PRICE_DENOM
+      IQ_GAS_PRICE_END_POINT,
+      IQ_GAS_PRICE_DENOM
     ).catch((_) => undefined);
 
     const tx = await this.Wallet.createAndSignTx({

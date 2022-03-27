@@ -1,4 +1,4 @@
-const WrappedUST = artifacts.require("WrappedUST");
+const WrappedBUSD = artifacts.require("WrappedBUSD");
 
 const CHAIN_ID = {
   mainnet: 1,
@@ -20,7 +20,7 @@ module.exports = function (deployer, network) {
     network == "hmy" ||
     network == "hmy_testnet"
   ) {
-    deployer.deploy(WrappedUST, {
+    deployer.deploy(WrappedBUSD, {
       gas: 5000000,
       overwrite: false,
       chainId: CHAIN_ID[network],

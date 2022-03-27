@@ -9,7 +9,7 @@ const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
 const REDIS_URL = process.env.REDIS_URL as string;
 const LISTEN_PORT = process.env.LISTEN_PORT as string;
 
-const REDIS_PREFIX = 'eth_shuttle' + ETH_CHAIN_ID.replace('mainnet', '');
+const REDIS_PREFIX = 'eth_unity' + ETH_CHAIN_ID.replace('mainnet', '');
 const KEY_QUEUE_MISSING_TX = 'queue_missing_tx';
 
 const redisClient = redis.createClient(REDIS_URL, { prefix: REDIS_PREFIX });

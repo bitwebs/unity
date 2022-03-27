@@ -1,4 +1,4 @@
-const WrappedmSLV = artifacts.require("WrappedmSLV");
+const WrappeddSLV = artifacts.require("WrappeddSLV");
 
 const CHAIN_ID = {
   mainnet: 1,
@@ -17,7 +17,7 @@ module.exports = function (deployer, network) {
     network == "bsc" ||
     network == "bsc_testnet"
   ) {
-    deployer.deploy(WrappedmSLV, {
+    deployer.deploy(WrappeddSLV, {
       gas: 5000000,
       overwrite: false,
       chainId: CHAIN_ID[network],

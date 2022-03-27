@@ -3,6 +3,6 @@ pragma solidity >=0.6.0;
 
 import './WrappedToken.sol';
 
-contract WrappedSDT is WrappedToken {
-    constructor() public WrappedToken("Wrapped SDT Token", "SDT") {}
+contract WrappedBSDR is WrappedToken {
+    constructor() public WrappedToken("Wrapped BSDR Token", "BSDR") {}
 }

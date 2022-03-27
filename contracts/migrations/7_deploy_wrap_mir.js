@@ -1,4 +1,4 @@
-const WrappedMIR = artifacts.require("WrappedMIR");
+const WrappedDUAL = artifacts.require("WrappedDUAL");
 
 const CHAIN_ID = {
   mainnet: 1,
@@ -17,7 +17,7 @@ module.exports = function (deployer, network) {
     network == "bsc" ||
     network == "bsc_testnet"
   ) {
-    deployer.deploy(WrappedMIR, {
+    deployer.deploy(WrappedDUAL, {
       gas: 5000000,
       overwrite: false,
       chainId: CHAIN_ID[network],

@@ -1,4 +1,4 @@
-const WrappedANC = artifacts.require("WrappedANC");
+const WrappedGEEZ = artifacts.require("WrappedGEEZ");
 
 const CHAIN_ID = {
   mainnet: 1,
@@ -12,7 +12,7 @@ const CHAIN_ID = {
 
 module.exports = function (deployer, network) {
   if (network == "mainnet" || network == "ropsten") {
-    deployer.deploy(WrappedANC, {
+    deployer.deploy(WrappedGEEZ, {
       gas: 5000000,
       overwrite: false,
       chainId: CHAIN_ID[network],

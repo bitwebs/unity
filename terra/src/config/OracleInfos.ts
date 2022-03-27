@@ -7,99 +7,99 @@ const oracleInfos: {
       | 'crypto'; // https://api.coingecko.com/api/v3/coins/mirror-protocol?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false
   };
 } = {
-  LUNA: {
-    ticker: 'terra-luna',
+  BIQ: {
+    ticker: 'iq-biq',
     type: 'crypto',
   },
-  UST: {
-    ticker: 'USD',
+  BUSD: {
+    ticker: 'BUSD',
     type: 'forex',
   },
-  KRT: {
-    ticker: 'KRW',
+  BKRW: {
+    ticker: 'BKRW',
     type: 'forex',
   },
-  SDT: {
-    ticker: 'XDR',
+  BSDR: {
+    ticker: 'BSDR',
     type: 'forex',
   },
-  MNT: {
-    ticker: 'MNT',
+  BMNT: {
+    ticker: 'BMNT',
     type: 'forex',
   },
-  MIR: {
-    ticker: 'mirror-protocol',
+  DUAL: {
+    ticker: 'duality-protocol',
     type: 'crypto',
   },
-  mAAPL: {
+  dAAPL: {
     ticker: 'AAPL',
     type: 'stock',
   },
-  mGOOGL: {
+  dGOOGL: {
     ticker: 'GOOGL',
     type: 'stock',
   },
-  mTSLA: {
+  dTSLA: {
     ticker: 'TSLA',
     type: 'stock',
   },
-  mNFLX: {
+  dNFLX: {
     ticker: 'NFLX',
     type: 'stock',
   },
-  mQQQ: {
+  dQQQ: {
     ticker: 'QQQ',
     type: 'stock',
   },
-  mTWTR: {
+  dTWTR: {
     ticker: 'TWTR',
     type: 'stock',
   },
-  mMSFT: {
+  dMSFT: {
     ticker: 'MSFT',
     type: 'stock',
   },
-  mAMZN: {
+  dAMZN: {
     ticker: 'AMZN',
     type: 'stock',
   },
-  mBABA: {
+  dBABA: {
     ticker: 'BABA',
     type: 'stock',
   },
-  mIAU: {
+  dIAU: {
     ticker: 'IAU',
     type: 'stock',
   },
-  mSLV: {
+  dSLV: {
     ticker: 'SLV',
     type: 'stock',
   },
-  mUSO: {
+  dUSO: {
     ticker: 'USO',
     type: 'stock',
   },
-  mVIXY: {
+  dVIXY: {
     ticker: 'VIXY',
     type: 'stock',
   },
-  aUST: {
-    ticker: 'anchorust',
+  gBUSD: {
+    ticker: 'gravity-busd',
     type: 'crypto',
   },
-  mFB: {
+  dFB: {
     ticker: 'FB',
     type: 'stock',
   },
-  ANC: {
-    ticker: 'anchor-protocol',
+  GEEZ: {
+    ticker: 'gravity-protocol',
     type: 'crypto',
   },
   vETH: {
     ticker: 'ethereum',
     type: 'crypto',
   },
-  bETH: {
+  iETH: {
     ticker: 'ethereum',
     type: 'crypto',
   },

@@ -1,4 +1,4 @@
-const WrappedmIAU = artifacts.require("WrappedmIAU");
+const WrappeddIAU = artifacts.require("WrappeddIAU");
 
 const CHAIN_ID = {
   mainnet: 1,
@@ -17,7 +17,7 @@ module.exports = function (deployer, network) {
     network == "bsc" ||
     network == "bsc_testnet"
   ) {
-    deployer.deploy(WrappedmIAU, {
+    deployer.deploy(WrappeddIAU, {
       gas: 5000000,
       overwrite: false,
       chainId: CHAIN_ID[network],

@@ -1,4 +1,4 @@
-const WrappedmFB = artifacts.require("WrappedmFB");
+const WrappeddFB = artifacts.require("WrappeddFB");
 
 const CHAIN_ID = {
   mainnet: 1,
@@ -17,7 +17,7 @@ module.exports = function (deployer, network) {
     network == "bsc" ||
     network == "bsc_testnet"
   ) {
-    deployer.deploy(WrappedmFB, {
+    deployer.deploy(WrappeddFB, {
       gas: 5000000,
       overwrite: false,
       chainId: CHAIN_ID[network],

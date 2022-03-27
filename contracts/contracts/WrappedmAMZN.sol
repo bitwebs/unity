@@ -3,6 +3,6 @@ pragma solidity >=0.6.0;
 
 import './WrappedToken.sol';
 
-contract WrappedmAMZN is WrappedToken {
-    constructor() public WrappedToken("Wrapped Mirror AMZN Token", "mAMZN") {}
+contract WrappeddAMZN is WrappedToken {
+    constructor() public WrappedToken("Wrapped Duality AMZN Token", "dAMZN") {}
 }

@@ -13,24 +13,24 @@ import {
   MsgExecuteContract,
   isTxError,
   Int,
-} from '@terra-money/terra.js';
+} from '@web4/iq.js';
 import prompts from 'prompts';
 
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
 
 import EthContractInfos from './config/EthContractInfos';
-import TerraAssetInfos from './config/TerraAssetInfos';
+import IqAssetInfos from './config/IqAssetInfos';
 import WrappedTokenAbi from './config/WrappedTokenAbi';
 
 const ETH_URL = process.env.ETH_URL as string;
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
 
-const TERRA_MNEMONIC = process.env.TERRA_MNEMONIC as string;
-const TERRA_CHAIN_ID = process.env.TERRA_CHAIN_ID as string;
-const TERRA_URL = process.env.TERRA_URL as string;
-const TERRA_GAS_PRICE = process.env.TERRA_GAS_PRICE as string;
-const TERRA_GAS_ADJUSTMENT = process.env.TERRA_GAS_ADJUSTMENT as string;
-const TERRA_FEE_COLLECTOR = process.env.TERRA_FEE_COLLECTOR as string;
+const IQ_MNEMONIC = process.env.IQ_MNEMONIC as string;
+const IQ_CHAIN_ID = process.env.IQ_CHAIN_ID as string;
+const IQ_URL = process.env.IQ_URL as string;
+const IQ_GAS_PRICE = process.env.IQ_GAS_PRICE as string;
+const IQ_GAS_ADJUSTMENT = process.env.IQ_GAS_ADJUSTMENT as string;
+const IQ_FEE_COLLECTOR = process.env.IQ_FEE_COLLECTOR as string;
 
 const MAX_RETRY = 5;
 export class FeeCollector {
@@ -40,41 +40,41 @@ export class FeeCollector {
   FeeCollectorAddr: AccAddress;
 
   EthContractInfos: { [asset: string]: EthereumContractInfo };
-  TerraAssetInfos: {
-    [asset: string]: TerraAssetInfo;
+  IqAssetInfos: {
+    [asset: string]: IqAssetInfo;
   };
 
   constructor() {
-    if (!AccAddress.validate(TERRA_FEE_COLLECTOR)) {
+    if (!AccAddress.validate(IQ_FEE_COLLECTOR)) {
       throw 'invalid fee collector address';
     }
 
     this.Web3 = new Web3(ETH_URL);
     this.LCDClient = new LCDClient({
-      URL: TERRA_URL,
-      chainID: TERRA_CHAIN_ID,
-      gasPrices: TERRA_GAS_PRICE,
-      gasAdjustment: TERRA_GAS_ADJUSTMENT,
+      URL: IQ_URL,
+      chainID: IQ_CHAIN_ID,
+      gasPrices: IQ_GAS_PRICE,
+      gasAdjustment: IQ_GAS_ADJUSTMENT,
     });
 
-    this.FeeCollectorAddr = TERRA_FEE_COLLECTOR;
+    this.FeeCollectorAddr = IQ_FEE_COLLECTOR;
     this.Wallet = new Wallet(
       this.LCDClient,
-      new MnemonicKey({ mnemonic: TERRA_MNEMONIC })
+      new MnemonicKey({ mnemonic: IQ_MNEMONIC })
     );
 
     const ethContractInfos = EthContractInfos[ETH_CHAIN_ID];
-    const terraAssetInfos = TerraAssetInfos[TERRA_CHAIN_ID];
+    const iqAssetInfos = IqAssetInfos[IQ_CHAIN_ID];
 
     this.EthContractInfos = {};
-    this.TerraAssetInfos = {};
+    this.IqAssetInfos = {};
 
     for (const [asset, value] of Object.entries(ethContractInfos)) {
       if (asset === 'minter') {
         continue;
       }
 
-      const info = terraAssetInfos[asset];
+      const info = iqAssetInfos[asset];
       if (info === undefined) {
         continue;
       }
@@ -95,7 +95,7 @@ export class FeeCollector {
         contract,
         migration_amount: new BigNumber(value.migration_amount || 0),
       };
-      this.TerraAssetInfos[asset] = info;
+      this.IqAssetInfos[asset] = info;
     }
   }
 
@@ -114,16 +114,16 @@ export class FeeCollector {
   }
 
   async getBalances(): Promise<[string, BigNumber][]> {
-    const shuttleAddress = this.Wallet.key.accAddress;
-    const [balance, _] = await this.LCDClient.bank.balance(shuttleAddress);
+    const unityAddress = this.Wallet.key.accAddress;
+    const [balance, _] = await this.LCDClient.bank.balance(unityAddress);
 
     const promises: [string, BigNumber][] = [];
-    for (const [asset, info] of Object.entries(this.TerraAssetInfos)) {
+    for (const [asset, info] of Object.entries(this.IqAssetInfos)) {
       if (info.contract_address !== undefined) {
         const contract_address = info.contract_address as string;
         const res: BalanceResponse = await this.LCDClient.wasm.contractQuery(
           contract_address,
-          { balance: { address: shuttleAddress } }
+          { balance: { address: unityAddress } }
         );
 
         promises.push([asset, new BigNumber(res.balance)]);
@@ -145,7 +145,7 @@ export class FeeCollector {
     const msgs: Msg[] = [];
     const taxRate = await this.LCDClient.treasury.taxRate();
     for (const [asset, amount] of collectedFees) {
-      const info = this.TerraAssetInfos[asset];
+      const info = this.IqAssetInfos[asset];
       const amountStr = amount.toFixed(0);
 
       if (info.denom) {
@@ -240,7 +240,7 @@ type EthereumContractInfo = {
   migration_amount: BigNumber;
 };
 
-type TerraAssetInfo = {
+type IqAssetInfo = {
   contract_address?: string;
   denom?: string;
 };

@@ -8,7 +8,7 @@ import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
 import {IWrappedToken} from "./WrappedToken.sol";
 
-contract ShuttleVault is IWrappedToken, Context, Ownable {
+contract UnityVault is IWrappedToken, Context, Ownable {
     using SafeERC20 for IERC20;
 
     IERC20 public token;

@@ -3,6 +3,6 @@ pragma solidity >=0.6.0;
 
 import './WrappedToken.sol';
 
-contract WrappedmFB is WrappedToken {
-    constructor() public WrappedToken("Wrapped Mirror FB Token", "mFB") {}
+contract WrappeddFB is WrappedToken {
+    constructor() public WrappedToken("Wrapped Duality FB Token", "dFB") {}
 }

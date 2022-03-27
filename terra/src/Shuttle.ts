@@ -18,7 +18,7 @@ const ETH_BLOCK_CONFIRMATION = parseInt(
 );
 
 // skip chain-id prefix for mainnet
-const REDIS_PREFIX = 'terra_shuttle' + ETH_CHAIN_ID.replace('mainnet', '');
+const REDIS_PREFIX = 'iq_unity' + ETH_CHAIN_ID.replace('mainnet', '');
 const KEY_LAST_HEIGHT = 'last_height';
 const KEY_LAST_TXHASH = 'last_txhash';
 const KEY_NEXT_NONCE = 'next_nonce';
@@ -27,7 +27,7 @@ const KEY_NEXT_MINTER_NONCE = 'next_minter_nonce';
 
 const KEY_QUEUE_TX = 'queue_tx';
 
-const TERRA_BLOCK_SECOND = parseInt(process.env.TERRA_BLOCK_SECOND as string);
+const IQ_BLOCK_SECOND = parseInt(process.env.IQ_BLOCK_SECOND as string);
 const REDIS_URL = process.env.REDIS_URL as string;
 
 const SLACK_NOTI_NETWORK = process.env.SLACK_NOTI_NETWORK;
@@ -44,7 +44,7 @@ const ax = axios.create({
   timeout: 15000,
 });
 
-class Shuttle {
+class Unity {
   monitoring: Monitoring;
   relayer: Relayer;
   dynamoDB: DynamoDB;
@@ -385,7 +385,7 @@ class Shuttle {
 
     // When catch the block height, wait block time
     if (newLastHeight === lastHeight) {
-      await Bluebird.delay(TERRA_BLOCK_SECOND * 1000);
+      await Bluebird.delay(IQ_BLOCK_SECOND * 1000);
     }
   }
 
@@ -479,7 +479,7 @@ class Shuttle {
         // tx found in block, remove it
         await this.lsetAsync(KEY_QUEUE_TX, idx, 'DELETE');
       } else if (!txReceipt.status) {
-        // tx is failed; stop shuttle operations
+        // tx is failed; stop unity operations
         this.stopOperation = true;
         throw new Error(
           `Tx failed; ${relayData.txHash} please check the problem`
@@ -496,7 +496,7 @@ function buildSlackNotification(
   resultTxHash: string
 ): { text: string } {
   let notification = '```';
-  notification += `[${SLACK_NOTI_NETWORK}] TERRA => ${SLACK_NOTI_ETH_ASSET}\n`;
+  notification += `[${SLACK_NOTI_NETWORK}] IQ => ${SLACK_NOTI_ETH_ASSET}\n`;
   notification += `Sender: ${data.sender}\n`;
   notification += `To:     ${data.to}\n`;
   notification += `\n`;
@@ -510,7 +510,7 @@ function buildSlackNotification(
     data.asset
   }\n`;
   notification += `\n`;
-  notification += `Terra TxHash: ${data.txHash}\n`;
+  notification += `Iq TxHash: ${data.txHash}\n`;
   notification += `${SLACK_NOTI_ETH_ASSET} TxHash:   ${resultTxHash}\n`;
   notification += '```';
   const text = `${notification}`;
@@ -520,4 +520,4 @@ function buildSlackNotification(
   };
 }
 
-export = Shuttle;
+export = Unity;

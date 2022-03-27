@@ -1,4 +1,4 @@
-const bETH = artifacts.require("bETH");
+const iETH = artifacts.require("iETH");
 
 const CHAIN_ID = {
   mainnet: 1,
@@ -13,7 +13,7 @@ const CHAIN_ID = {
 module.exports = function (deployer, network) {
   if (network == "mainnet") {
     deployer.deploy(
-      bETH,
+      iETH,
       "0x707F9118e33A9B8998beA41dd0d46f38bb963FC8",
       {
         gas: 2000000,
@@ -23,7 +23,7 @@ module.exports = function (deployer, network) {
     );
   } else if (network == "ropsten") {
     deployer.deploy(
-      bETH,
+      iETH,
       "0xA60100d5e12E9F83c1B04997314cf11685A618fF",
       {
         gas: 2000000,

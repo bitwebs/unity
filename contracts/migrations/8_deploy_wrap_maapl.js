@@ -1,4 +1,4 @@
-const WrappedmAAPL = artifacts.require("WrappedmAAPL");
+const WrappeddAAPL = artifacts.require("WrappeddAAPL");
 
 const CHAIN_ID = {
   mainnet: 1,
@@ -17,7 +17,7 @@ module.exports = function (deployer, network) {
     network == "bsc" ||
     network == "bsc_testnet"
   ) {
-    deployer.deploy(WrappedmAAPL, {
+    deployer.deploy(WrappeddAAPL, {
       gas: 5000000,
       overwrite: false,
       chainId: CHAIN_ID[network],

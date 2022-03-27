@@ -1,4 +1,4 @@
-const WrappedSDT = artifacts.require("WrappedSDT");
+const WrappedBSDR = artifacts.require("WrappedBSDR");
 
 const CHAIN_ID = {
   mainnet: 1,
@@ -17,7 +17,7 @@ module.exports = function (deployer, network) {
     network == "bsc" ||
     network == "bsc_testnet"
   ) {
-    deployer.deploy(WrappedSDT, {
+    deployer.deploy(WrappedBSDR, {
       gas: 5000000,
       overwrite: false,
       chainId: CHAIN_ID[network],

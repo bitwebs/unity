@@ -1,9 +1,9 @@
 require('dotenv').config();
 
-import Shuttle from './Shuttle';
+import Unity from './Unity';
 
-const shuttle = new Shuttle();
+const unity = new Unity();
 
-shuttle.startMonitoring().catch((err) => {
+unity.startMonitoring().catch((err) => {
   console.error(`Exit with ${err}`);
 });

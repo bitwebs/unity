@@ -1,4 +1,4 @@
-const WrappedLuna = artifacts.require("WrappedLuna");
+const WrappedBiq = artifacts.require("WrappedBiq");
 
 const CHAIN_ID = {
   mainnet: 1,
@@ -19,7 +19,7 @@ module.exports = function (deployer, network) {
     network == "hmy" ||
     network == "hmy_testnet"
   ) {
-    deployer.deploy(WrappedLuna, {
+    deployer.deploy(WrappedBiq, {
       gas: 5000000,
       overwrite: false,
       chainId: CHAIN_ID[network],

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.6.0;
 
-import "./ShuttleVault.sol";
+import "./UnityVault.sol";
 
-contract bETH is ShuttleVault {
-    constructor(address _token) public ShuttleVault(_token) {}
+contract iETH is UnityVault {
+    constructor(address _token) public UnityVault(_token) {}
 }

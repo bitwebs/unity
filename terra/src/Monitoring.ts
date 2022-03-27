@@ -5,9 +5,9 @@ import {
   MsgExecuteContract,
   TxInfo,
   TxSearchResult,
-} from '@terra-money/terra.js';
+} from '@web4/iq.js';
 import EthContractInfos from './config/EthContractInfos';
-import TerraAssetInfos from './config/TerraAssetInfos';
+import IqAssetInfos from './config/IqAssetInfos';
 import BigNumber from 'bignumber.js';
 import Oracle from './Oracle';
 
@@ -16,45 +16,45 @@ BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
 const FEE_RATE = new BigNumber(process.env.FEE_RATE as string);
 const FEE_MIN_AMOUNT = new BigNumber(process.env.FEE_MIN_AMOUNT as string);
 
-const TERRA_TRACKING_ADDR = process.env.TERRA_TRACKING_ADDR as string;
-const TERRA_TXS_LOAD_UNIT = parseInt(process.env.TERRA_TXS_LOAD_UNIT as string);
-const TERRA_BLOCK_CONFIRMATION = parseInt(
-  process.env.TERRA_BLOCK_CONFIRMATION as string
+const IQ_TRACKING_ADDR = process.env.IQ_TRACKING_ADDR as string;
+const IQ_TXS_LOAD_UNIT = parseInt(process.env.IQ_TXS_LOAD_UNIT as string);
+const IQ_BLOCK_CONFIRMATION = parseInt(
+  process.env.IQ_BLOCK_CONFIRMATION as string
 );
 
 const ETH_CHAIN_ID = process.env.ETH_CHAIN_ID as string;
-const TERRA_CHAIN_ID = process.env.TERRA_CHAIN_ID as string;
-const TERRA_URL = process.env.TERRA_URL as string;
+const IQ_CHAIN_ID = process.env.IQ_CHAIN_ID as string;
+const IQ_URL = process.env.IQ_URL as string;
 
 export class Monitoring {
   oracle: Oracle;
   LCDClient: LCDClient;
-  TerraTrackingAddress: AccAddress;
+  IqTrackingAddress: AccAddress;
 
   minterAddress?: string;
   EthContracts: {
     [asset: string]: { contract_address: string; black_list: string[] };
   };
-  TerraAssetMapping: {
+  IqAssetMapping: {
     [denom_or_address: string]: string;
   };
-  TerraAssetInfos: {
-    [asset: string]: TerraAssetInfo;
+  IqAssetInfos: {
+    [asset: string]: IqAssetInfo;
   };
 
   constructor() {
-    this.TerraTrackingAddress = TERRA_TRACKING_ADDR;
+    this.IqTrackingAddress = IQ_TRACKING_ADDR;
     this.oracle = new Oracle();
     this.LCDClient = new LCDClient({
-      URL: TERRA_URL,
-      chainID: TERRA_CHAIN_ID,
+      URL: IQ_URL,
+      chainID: IQ_CHAIN_ID,
     });
 
     const ethContractInfos = EthContractInfos[ETH_CHAIN_ID];
-    this.TerraAssetInfos = TerraAssetInfos[TERRA_CHAIN_ID];
+    this.IqAssetInfos = IqAssetInfos[IQ_CHAIN_ID];
 
     this.EthContracts = {};
-    this.TerraAssetMapping = {};
+    this.IqAssetMapping = {};
 
     for (const [asset, value] of Object.entries(ethContractInfos)) {
       if (asset === 'minter') {
@@ -64,7 +64,7 @@ export class Monitoring {
         continue;
       }
 
-      const info = this.TerraAssetInfos[asset];
+      const info = this.IqAssetInfos[asset];
       if (info === undefined) {
         continue;
       }
@@ -84,7 +84,7 @@ export class Monitoring {
         contract_address: value.contract_address,
         black_list: [value.contract_address, ...(value.black_list ?? [])],
       };
-      this.TerraAssetMapping[info.denom || info.contract_address || ''] = asset;
+      this.IqAssetMapping[info.denom || info.contract_address || ''] = asset;
     }
   }
 
@@ -93,7 +93,7 @@ export class Monitoring {
     const latestHeight =
       parseInt(
         (await this.LCDClient.tendermint.blockInfo()).block.header.height
-      ) - TERRA_BLOCK_CONFIRMATION;
+      ) - IQ_BLOCK_CONFIRMATION;
 
     // skip no new blocks generated
     if (lastHeight >= latestHeight) {
@@ -102,7 +102,7 @@ export class Monitoring {
 
     // If initial state, we start sync from latest height
     const targetHeight = lastHeight === 0 ? latestHeight : lastHeight + 1;
-    const limit = TERRA_TXS_LOAD_UNIT;
+    const limit = IQ_TXS_LOAD_UNIT;
     const monitoringDatas: MonitoringData[] = [];
 
     let page = 0;
@@ -144,16 +144,16 @@ export class Monitoring {
     if (msgType === '/cosmos.bank.v1beta1.MsgSend') {
       const data: MsgSend.Data = msgData as MsgSend.Data;
 
-      // Check a recipient is TerraTrackingAddress
-      if (data.to_address === this.TerraTrackingAddress) {
+      // Check a recipient is IqTrackingAddress
+      if (data.to_address === this.IqTrackingAddress) {
         const blockNumber = tx.height;
         const txHash = tx.txhash;
         const sender = data.from_address;
         const to = tx.tx.body.memo ?? '';
 
         for (const coin of data.amount) {
-          if (coin.denom in this.TerraAssetMapping) {
-            const asset = this.TerraAssetMapping[coin.denom];
+          if (coin.denom in this.IqAssetMapping) {
+            const asset = this.IqAssetMapping[coin.denom];
             const requested = new BigNumber(coin.amount);
 
             // Compute fee with minimum fee consideration
@@ -182,21 +182,21 @@ export class Monitoring {
           }
         }
       }
-    } else if (msgType === '/terra.wasm.v1beta1.MsgExecuteContract') {
+    } else if (msgType === '/iq.wasm.v1beta1.MsgExecuteContract') {
       const data: MsgExecuteContract.Data = msgData as MsgExecuteContract.Data;
 
-      if (data.contract in this.TerraAssetMapping) {
-        const asset = this.TerraAssetMapping[data.contract];
-        const info = this.TerraAssetInfos[asset];
+      if (data.contract in this.IqAssetMapping) {
+        const asset = this.IqAssetMapping[data.contract];
+        const info = this.IqAssetInfos[asset];
         const executeMsg = data.execute_msg as any;
 
         if (!info.is_eth_asset && 'transfer' in executeMsg) {
-          // Check the msg is 'transfer' for terra asset
+          // Check the msg is 'transfer' for iq asset
           const transferMsg = executeMsg['transfer'];
           const recipient = transferMsg['recipient'];
 
-          // Check the recipient is TerraTrackingAddress
-          if (recipient === this.TerraTrackingAddress) {
+          // Check the recipient is IqTrackingAddress
+          if (recipient === this.IqTrackingAddress) {
             const blockNumber = tx.height;
             const txHash = tx.txhash;
             const sender = data.sender;
@@ -283,7 +283,7 @@ export class Monitoring {
   }
 }
 
-export type TerraAssetInfo = {
+export type IqAssetInfo = {
   is_eth_asset?: boolean;
   contract_address?: string;
   denom?: string;

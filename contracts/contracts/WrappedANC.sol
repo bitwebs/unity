@@ -3,6 +3,6 @@ pragma solidity >=0.6.0;
 
 import './WrappedToken.sol';
 
-contract WrappedANC is WrappedToken {
-    constructor() public WrappedToken("Wrapped ANC Token", "ANC") {}
+contract WrappedGEEZ is WrappedToken {
+    constructor() public WrappedToken("Wrapped GEEZ Token", "GEEZ") {}
 }

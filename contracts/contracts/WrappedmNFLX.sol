@@ -3,6 +3,6 @@ pragma solidity >=0.6.0;
 
 import './WrappedToken.sol';
 
-contract WrappedmNFLX is WrappedToken {
-    constructor() public WrappedToken("Wrapped Mirror NFLX Token", "mNFLX") {}
+contract WrappeddNFLX is WrappedToken {
+    constructor() public WrappedToken("Wrapped Duality NFLX Token", "dNFLX") {}
 }
