@@ -1,4 +1,4 @@
-# Shuttle Ethereum
+# Unity Ethereum
 
 # How to use
   * Update src/config
