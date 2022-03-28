@@ -12,19 +12,19 @@ const oracleInfos: {
     type: 'crypto',
   },
   BUSD: {
-    ticker: 'BUSD',
+    ticker: 'USD',
     type: 'forex',
   },
   BKRW: {
-    ticker: 'BKRW',
+    ticker: 'KRW',
     type: 'forex',
   },
   BSDR: {
-    ticker: 'BSDR',
+    ticker: 'SDR',
     type: 'forex',
   },
   BMNT: {
-    ticker: 'BMNT',
+    ticker: 'MNT',
     type: 'forex',
   },
   DUAL: {
